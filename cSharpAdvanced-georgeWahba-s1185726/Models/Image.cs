@@ -5,5 +5,10 @@
         public int Id { get; set; }
         public string Url { get; set; }
         public bool IsCover { get; set; }
+
+        public int LocationId { get; set; } // Foreign key
+
+        // Navigation property for location
+        public Location Location { get; set; }
     }
 }

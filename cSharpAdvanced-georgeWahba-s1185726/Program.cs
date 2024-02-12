@@ -1,4 +1,9 @@
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using cSharpAdvanced_georgeWahba_s1185726.Data;
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddDbContext<cSharpAdvanced_georgeWahba_s1185726Context>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("cSharpAdvanced_georgeWahba_s1185726Context") ?? throw new InvalidOperationException("Connection string 'cSharpAdvanced_georgeWahba_s1185726Context' not found.")));
 
 // Add services to the container.
 

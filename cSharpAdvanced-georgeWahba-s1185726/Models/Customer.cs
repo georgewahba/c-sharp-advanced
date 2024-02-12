@@ -6,6 +6,8 @@
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Email { get; set; }
-        public Reservation reservations { get; set; }
+
+        // Navigation property for reservations 
+        public ICollection<Reservation> Reservations { get; set; }
     }
 }

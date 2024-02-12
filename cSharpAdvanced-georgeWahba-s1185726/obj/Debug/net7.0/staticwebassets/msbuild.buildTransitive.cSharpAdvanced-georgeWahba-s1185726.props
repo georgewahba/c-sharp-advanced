@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\buildMultiTargeting\cSharpAdvanced-georgeWahba-s1185726.props" />
+</Project>
