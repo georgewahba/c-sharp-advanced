@@ -475,11 +475,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\georg\\OneDrive - Windesheim Office365\\jaar_2\\c_sharp\\cSharpAdvanced-georgeWahba-s1185726\\cSharpAdvanced-georgeWahba-s1185726\\cSharpAdvanced-georgeWahba-s1185726.csproj",
+      "projectUniqueName": "C:\\Users\\georg\\OneDrive - Windesheim Office365\\jaar_2\\c_sharp\\c-sharp-advanced\\cSharpAdvanced-georgeWahba-s1185726\\cSharpAdvanced-georgeWahba-s1185726\\cSharpAdvanced-georgeWahba-s1185726.csproj",
       "projectName": "cSharpAdvanced-georgeWahba-s1185726",
-      "projectPath": "C:\\Users\\georg\\OneDrive - Windesheim Office365\\jaar_2\\c_sharp\\cSharpAdvanced-georgeWahba-s1185726\\cSharpAdvanced-georgeWahba-s1185726\\cSharpAdvanced-georgeWahba-s1185726.csproj",
+      "projectPath": "C:\\Users\\georg\\OneDrive - Windesheim Office365\\jaar_2\\c_sharp\\c-sharp-advanced\\cSharpAdvanced-georgeWahba-s1185726\\cSharpAdvanced-georgeWahba-s1185726\\cSharpAdvanced-georgeWahba-s1185726.csproj",
       "packagesPath": "C:\\Users\\georg\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\georg\\OneDrive - Windesheim Office365\\jaar_2\\c_sharp\\cSharpAdvanced-georgeWahba-s1185726\\cSharpAdvanced-georgeWahba-s1185726\\obj\\",
+      "outputPath": "C:\\Users\\georg\\OneDrive - Windesheim Office365\\jaar_2\\c_sharp\\c-sharp-advanced\\cSharpAdvanced-georgeWahba-s1185726\\cSharpAdvanced-georgeWahba-s1185726\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
