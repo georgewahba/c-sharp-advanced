@@ -109,9 +109,12 @@ namespace cSharpAdvanced_georgeWahba_s1185726.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Feature")
+                    b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Feature")
+                        .HasColumnType("int");
 
                     b.Property<int>("LandlordId")
                         .HasColumnType("int");

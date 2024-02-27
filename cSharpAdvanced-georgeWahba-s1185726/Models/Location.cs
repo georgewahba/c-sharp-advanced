@@ -8,14 +8,13 @@ namespace cSharpAdvanced_georgeWahba_s1185726.Models
         public int Id { get; set; }
         public string Title { get; set; }
         public string SubTitle { get; set; }
+        public string Description { get; set; }
 
         [JsonConverter(typeof(JsonStringEnumConverter))]
         public LocationType Type { get; set; }
 
         public int Rooms { get; set; }
         public int NumberOfGuests { get; set; }
-
-        [JsonConverter(typeof(JsonStringEnumConverter))]
         public Features Feature { get; set; }
         public float PricePerDay { get; set; }
 
@@ -40,14 +39,15 @@ namespace cSharpAdvanced_georgeWahba_s1185726.Models
             House
         }
 
+        [Flags]
         public enum Features
         {
-            Smoking,
-            Wifi,
-            Bath,
-            PetsAllowed,
-            TV,
-            Breakfast
+            Smoking = 1,
+            PetsAllowed = 2,
+            Wifi = 4,
+            TV = 8,
+            Bath = 16,
+            Breakfast = 32
         }
     }
 }

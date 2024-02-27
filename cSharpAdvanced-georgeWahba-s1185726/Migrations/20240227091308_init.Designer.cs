@@ -12,8 +12,8 @@ using cSharpAdvanced_georgeWahba_s1185726.Data;
 namespace cSharpAdvanced_georgeWahba_s1185726.Migrations
 {
     [DbContext(typeof(cSharpAdvanced_georgeWahba_s1185726Context))]
-    [Migration("20240212220952_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20240227091308_init")]
+    partial class init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -112,9 +112,12 @@ namespace cSharpAdvanced_georgeWahba_s1185726.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Feature")
+                    b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Feature")
+                        .HasColumnType("int");
 
                     b.Property<int>("LandlordId")
                         .HasColumnType("int");

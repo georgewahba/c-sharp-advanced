@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace cSharpAdvanced_georgeWahba_s1185726.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -70,10 +70,11 @@ namespace cSharpAdvanced_georgeWahba_s1185726.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     SubTitle = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Type = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Rooms = table.Column<int>(type: "int", nullable: false),
                     NumberOfGuests = table.Column<int>(type: "int", nullable: false),
-                    Feature = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Feature = table.Column<int>(type: "int", nullable: false),
                     PricePerDay = table.Column<float>(type: "real", nullable: false),
                     LandlordId = table.Column<int>(type: "int", nullable: false)
                 },

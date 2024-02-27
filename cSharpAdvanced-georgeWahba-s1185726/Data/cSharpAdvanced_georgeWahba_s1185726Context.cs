@@ -1,4 +1,5 @@
-﻿using cSharpAdvanced_georgeWahba_s1185726.Models;
+﻿
+using cSharpAdvanced_georgeWahba_s1185726.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace cSharpAdvanced_georgeWahba_s1185726.Data
@@ -53,6 +54,10 @@ namespace cSharpAdvanced_georgeWahba_s1185726.Data
                 .WithMany()
                 .HasForeignKey(l => l.AvatarId) // Correctly linking AvatarId as the foreign key
                 .IsRequired(false); // If AvatarId is nullable
+
+            modelBuilder.Entity<Location>()
+               .Property(e => e.Feature)
+               .HasConversion<int>();
         }
 
         private void SeedDatabase()

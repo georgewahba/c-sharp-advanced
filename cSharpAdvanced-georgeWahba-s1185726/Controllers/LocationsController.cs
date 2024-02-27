@@ -21,17 +21,19 @@ namespace cSharpAdvanced_georgeWahba_s1185726.Controllers
             _context = context;
         }
 
+
         // GET: api/Locations/GetAll
         [HttpGet("GetAll")]
         public async Task<ActionResult<IEnumerable<Location>>> GetAllLocations()
         {
-          if (_context.Location == null)
-          {
-              return NotFound();
-          }
-            return await _context.Location.ToListAsync();
-        }
+            var locations = await _context.Location.ToListAsync();
+            if (locations == null || !locations.Any())
+            {
+                return NotFound();
+            }
 
+            return locations;
+        }
         // GET: api/Locations
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Location>>> GetLocation()
