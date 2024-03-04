@@ -12,7 +12,7 @@ using cSharpAdvanced_georgeWahba_s1185726.Data;
 namespace cSharpAdvanced_georgeWahba_s1185726.Migrations
 {
     [DbContext(typeof(cSharpAdvanced_georgeWahba_s1185726Context))]
-    [Migration("20240227091308_init")]
+    [Migration("20240227095630_init")]
     partial class init
     {
         /// <inheritdoc />
@@ -139,9 +139,8 @@ namespace cSharpAdvanced_georgeWahba_s1185726.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Type")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("Type")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 

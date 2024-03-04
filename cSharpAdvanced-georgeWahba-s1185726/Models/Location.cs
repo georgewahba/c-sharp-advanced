@@ -10,7 +10,6 @@ namespace cSharpAdvanced_georgeWahba_s1185726.Models
         public string SubTitle { get; set; }
         public string Description { get; set; }
 
-        [JsonConverter(typeof(JsonStringEnumConverter))]
         public LocationType Type { get; set; }
 
         public int Rooms { get; set; }

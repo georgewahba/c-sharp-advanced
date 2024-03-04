@@ -71,7 +71,7 @@ namespace cSharpAdvanced_georgeWahba_s1185726.Migrations
                     Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     SubTitle = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Type = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Type = table.Column<int>(type: "int", nullable: false),
                     Rooms = table.Column<int>(type: "int", nullable: false),
                     NumberOfGuests = table.Column<int>(type: "int", nullable: false),
                     Feature = table.Column<int>(type: "int", nullable: false),

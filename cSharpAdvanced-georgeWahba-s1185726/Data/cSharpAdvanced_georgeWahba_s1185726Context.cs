@@ -23,11 +23,11 @@ namespace cSharpAdvanced_georgeWahba_s1185726.Data
         {
             modelBuilder.Entity<Location>()
                .Property(e => e.Type)
-               .HasConversion<string>();
+               .HasConversion<int>();
 
             modelBuilder.Entity<Location>()
                 .Property(e => e.Feature)
-                .HasConversion<string>();
+                .HasConversion<int>();
 
             modelBuilder.Entity<Reservation>()
                 .HasOne(r => r.Customer)
@@ -55,9 +55,6 @@ namespace cSharpAdvanced_georgeWahba_s1185726.Data
                 .HasForeignKey(l => l.AvatarId) // Correctly linking AvatarId as the foreign key
                 .IsRequired(false); // If AvatarId is nullable
 
-            modelBuilder.Entity<Location>()
-               .Property(e => e.Feature)
-               .HasConversion<int>();
         }
 
         private void SeedDatabase()

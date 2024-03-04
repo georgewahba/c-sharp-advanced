@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using cSharpAdvanced_georgeWahba_s1185726.Data;
 using cSharpAdvanced_georgeWahba_s1185726.Models;
+using cSharpAdvanced_georgeWahba_s1185726.Services;
 
 namespace cSharpAdvanced_georgeWahba_s1185726.Controllers
 {
@@ -30,6 +31,20 @@ namespace cSharpAdvanced_georgeWahba_s1185726.Controllers
               return NotFound();
           }
             return await _context.Landlord.ToListAsync();
+        }
+
+        [HttpGet("locations")]
+        public ActionResult<IEnumerable<Location>> GetAllLocations()
+        {
+            var searchService = new SearchService(_context);
+            var locations = searchService.GetAllLocations();
+
+            if (locations == null || !locations.Any())
+            {
+                return NotFound("No locations found.");
+            }
+
+            return Ok(locations);
         }
 
         // GET: api/Landlords/5
