@@ -1,9 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "YHLfGR67R4PMeiNS+B7c5arupU5363cqcdUnU9+9TNjgA2gepgVYpzfl+D1sfJKc9FndnLt8fHSWp+yTV119eA==",
+  "dgSpecHash": "IeSHmjuIJRDtzujtmvm1/IM9RIzHtWHjjiBmE/Me8OYeOtJy16aJoXZP2w5o4zPnazK6rqW86Wc/Al8xwIVEQg==",
   "success": true,
   "projectFilePath": "C:\\Users\\georg\\OneDrive - Windesheim Office365\\jaar_2\\c_sharp\\c-sharp-advanced\\cSharpAdvanced-georgeWahba-s1185726\\cSharpAdvanced-georgeWahba-s1185726.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\georg\\.nuget\\packages\\automapper\\13.0.1\\automapper.13.0.1.nupkg.sha512",
     "C:\\Users\\georg\\.nuget\\packages\\azure.core\\1.25.0\\azure.core.1.25.0.nupkg.sha512",
     "C:\\Users\\georg\\.nuget\\packages\\azure.identity\\1.7.0\\azure.identity.1.7.0.nupkg.sha512",
     "C:\\Users\\georg\\.nuget\\packages\\humanizer\\2.14.1\\humanizer.2.14.1.nupkg.sha512",

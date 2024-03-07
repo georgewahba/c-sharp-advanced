@@ -1,11 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using cSharpAdvanced_georgeWahba_s1185726.Data;
+using cSharpAdvanced_georgeWahba_s1185726.DTOs;
 using cSharpAdvanced_georgeWahba_s1185726.Models;
 
 namespace cSharpAdvanced_georgeWahba_s1185726.Controllers
@@ -15,16 +15,17 @@ namespace cSharpAdvanced_georgeWahba_s1185726.Controllers
     public class LocationsController : ControllerBase
     {
         private readonly cSharpAdvanced_georgeWahba_s1185726Context _context;
+        private readonly IMapper _mapper;
 
-        public LocationsController(cSharpAdvanced_georgeWahba_s1185726Context context)
+        public LocationsController(cSharpAdvanced_georgeWahba_s1185726Context context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
-
-        // GET: api/Locations/GetAll
-        [HttpGet("GetAll")]
-        public async Task<ActionResult<IEnumerable<Location>>> GetAllLocations()
+        // GET: api/Locations
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<LocationDTO>>> GetLocation()
         {
             var locations = await _context.Location.ToListAsync();
             if (locations == null || !locations.Any())
@@ -32,27 +33,14 @@ namespace cSharpAdvanced_georgeWahba_s1185726.Controllers
                 return NotFound();
             }
 
-            return locations;
-        }
-        // GET: api/Locations
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Location>>> GetLocation()
-        {
-          if (_context.Location == null)
-          { 
-              return NotFound();
-          }
-            return await _context.Location.ToListAsync();
+            var mappedLocations = _mapper.Map<IEnumerable<LocationDTO>>(locations);
+            return Ok(mappedLocations);
         }
 
         // GET: api/Locations/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Location>> GetLocation(int id)
+        public async Task<ActionResult<LocationDTO>> GetLocation(int id)
         {
-          if (_context.Location == null)
-          {
-              return NotFound();
-          }
             var location = await _context.Location.FindAsync(id);
 
             if (location == null)
@@ -60,18 +48,20 @@ namespace cSharpAdvanced_georgeWahba_s1185726.Controllers
                 return NotFound();
             }
 
-            return location;
+            var mappedLocation = _mapper.Map<LocationDTO>(location);
+            return mappedLocation;
         }
 
         // PUT: api/Locations/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutLocation(int id, Location location)
+        public async Task<IActionResult> PutLocation(int id, LocationDTO locationDTO)
         {
-            if (id != location.Id)
+            if (id != locationDTO.Id)
             {
                 return BadRequest();
             }
+
+            var location = _mapper.Map<Location>(locationDTO);
 
             _context.Entry(location).State = EntityState.Modified;
 
@@ -95,28 +85,21 @@ namespace cSharpAdvanced_georgeWahba_s1185726.Controllers
         }
 
         // POST: api/Locations
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Location>> PostLocation(Location location)
+        public async Task<ActionResult<LocationDTO>> PostLocation(LocationDTO locationDTO)
         {
-          if (_context.Location == null)
-          {
-              return Problem("Entity set 'cSharpAdvanced_georgeWahba_s1185726Context.Location'  is null.");
-          }
+            var location = _mapper.Map<Location>(locationDTO);
+
             _context.Location.Add(location);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetLocation", new { id = location.Id }, location);
+            return CreatedAtAction("GetLocation", new { id = location.Id }, locationDTO);
         }
 
         // DELETE: api/Locations/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteLocation(int id)
         {
-            if (_context.Location == null)
-            {
-                return NotFound();
-            }
             var location = await _context.Location.FindAsync(id);
             if (location == null)
             {
@@ -131,7 +114,7 @@ namespace cSharpAdvanced_georgeWahba_s1185726.Controllers
 
         private bool LocationExists(int id)
         {
-            return (_context.Location?.Any(e => e.Id == id)).GetValueOrDefault();
+            return _context.Location.Any(e => e.Id == id);
         }
     }
 }
