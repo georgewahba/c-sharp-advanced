@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using cSharpAdvanced_georgeWahba_s1185726.Data;
 using cSharpAdvanced_georgeWahba_s1185726.Models;
+using cSharpAdvanced_georgeWahba_s1185726.Repositories;
 
 namespace cSharpAdvanced_georgeWahba_s1185726.Controllers
 {
@@ -14,44 +15,34 @@ namespace cSharpAdvanced_georgeWahba_s1185726.Controllers
     [ApiController]
     public class ReservationsController : ControllerBase
     {
-        private readonly cSharpAdvanced_georgeWahba_s1185726Context _context;
+        private readonly IReservationRepository _reservationRepository;
 
-        public ReservationsController(cSharpAdvanced_georgeWahba_s1185726Context context)
+        public ReservationsController(IReservationRepository reservationRepository)
         {
-            _context = context;
+            _reservationRepository = reservationRepository;
         }
 
         // GET: api/Reservations
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Reservation>>> GetReservation()
         {
-          if (_context.Reservation == null)
-          {
-              return NotFound();
-          }
-            return await _context.Reservation.ToListAsync();
+            var reservations = await _reservationRepository.GetAllReservations();
+            return Ok(reservations);
         }
 
         // GET: api/Reservations/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Reservation>> GetReservation(int id)
         {
-          if (_context.Reservation == null)
-          {
-              return NotFound();
-          }
-            var reservation = await _context.Reservation.FindAsync(id);
-
+            var reservation = await _reservationRepository.GetReservationById(id);
             if (reservation == null)
             {
                 return NotFound();
             }
-
-            return reservation;
+            return Ok(reservation);
         }
 
         // PUT: api/Reservations/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
         public async Task<IActionResult> PutReservation(int id, Reservation reservation)
         {
@@ -60,65 +51,34 @@ namespace cSharpAdvanced_georgeWahba_s1185726.Controllers
                 return BadRequest();
             }
 
-            _context.Entry(reservation).State = EntityState.Modified;
-
-            try
+            var updated = await _reservationRepository.UpdateReservation(reservation);
+            if (!updated)
             {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!ReservationExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                return NotFound();
             }
 
             return NoContent();
         }
 
         // POST: api/Reservations
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         public async Task<ActionResult<Reservation>> PostReservation(Reservation reservation)
         {
-          if (_context.Reservation == null)
-          {
-              return Problem("Entity set 'cSharpAdvanced_georgeWahba_s1185726Context.Reservation'  is null.");
-          }
-            _context.Reservation.Add(reservation);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetReservation", new { id = reservation.Id }, reservation);
+            var createdReservation = await _reservationRepository.AddReservation(reservation);
+            return CreatedAtAction("GetReservation", new { id = createdReservation.Id }, createdReservation);
         }
 
         // DELETE: api/Reservations/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteReservation(int id)
         {
-            if (_context.Reservation == null)
+            var deleted = await _reservationRepository.DeleteReservation(id);
+            if (!deleted)
             {
                 return NotFound();
             }
-            var reservation = await _context.Reservation.FindAsync(id);
-            if (reservation == null)
-            {
-                return NotFound();
-            }
-
-            _context.Reservation.Remove(reservation);
-            await _context.SaveChangesAsync();
 
             return NoContent();
-        }
-
-        private bool ReservationExists(int id)
-        {
-            return (_context.Reservation?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }

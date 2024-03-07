@@ -22,18 +22,18 @@ namespace cSharpAdvanced_georgeWahba_s1185726.Data
             {
                 var customers = new[]
                 {
-            new Customer { FirstName = "John", LastName = "Doe", Email = "john@example.com" },
-            new Customer { FirstName = "Jane", LastName = "Smith", Email = "jane@example.com" },
-            // Add more customers as needed
-            new Customer { FirstName = "Alice", LastName = "Johnson", Email = "alice@example.com" },
-            new Customer { FirstName = "Bob", LastName = "Williams", Email = "bob@example.com" },
-            new Customer { FirstName = "Eva", LastName = "Brown", Email = "eva@example.com" },
-            new Customer { FirstName = "Jack", LastName = "Jones", Email = "jack@example.com" },
-            new Customer { FirstName = "Sophia", LastName = "Davis", Email = "sophia@example.com" },
-            new Customer { FirstName = "Michael", LastName = "Miller", Email = "michael@example.com" },
-            new Customer { FirstName = "Olivia", LastName = "Wilson", Email = "olivia@example.com" },
-            new Customer { FirstName = "William", LastName = "Moore", Email = "william@example.com" }
-        };
+                    new Customer { FirstName = "John", LastName = "Doe", Email = "john@example.com" },
+                    new Customer { FirstName = "Jane", LastName = "Smith", Email = "jane@example.com" },
+                    // Add more customers as needed
+                    new Customer { FirstName = "Alice", LastName = "Johnson", Email = "alice@example.com" },
+                    new Customer { FirstName = "Bob", LastName = "Williams", Email = "bob@example.com" },
+                    new Customer { FirstName = "Eva", LastName = "Brown", Email = "eva@example.com" },
+                    new Customer { FirstName = "Jack", LastName = "Jones", Email = "jack@example.com" },
+                    new Customer { FirstName = "Sophia", LastName = "Davis", Email = "sophia@example.com" },
+                    new Customer { FirstName = "Michael", LastName = "Miller", Email = "michael@example.com" },
+                    new Customer { FirstName = "Olivia", LastName = "Wilson", Email = "olivia@example.com" },
+                    new Customer { FirstName = "William", LastName = "Moore", Email = "william@example.com" }
+                };
                 context.Customer.AddRange(customers);
                 context.SaveChanges();
             }
@@ -45,18 +45,18 @@ namespace cSharpAdvanced_georgeWahba_s1185726.Data
             {
                 var landlords = new[]
                 {
-            new Landlord { FirstName = "Michael", LastName = "Scott", Age = 45 },
-            new Landlord { FirstName = "Dwight", LastName = "Schrute", Age = 40 },
-            // Add more landlords as needed
-            new Landlord { FirstName = "Pam", LastName = "Beesly", Age = 35 },
-            new Landlord { FirstName = "Jim", LastName = "Halpert", Age = 36 },
-            new Landlord { FirstName = "Stanley", LastName = "Hudson", Age = 60 },
-            new Landlord { FirstName = "Angela", LastName = "Martin", Age = 38 },
-            new Landlord { FirstName = "Kevin", LastName = "Malone", Age = 45 },
-            new Landlord { FirstName = "Oscar", LastName = "Martinez", Age = 42 },
-            new Landlord { FirstName = "Creed", LastName = "Bratton", Age = 60 },
-            new Landlord { FirstName = "Ryan", LastName = "Howard", Age = 33 }
-        };
+                    new Landlord { FirstName = "Michael", LastName = "Scott", Age = 45 },
+                    new Landlord { FirstName = "Dwight", LastName = "Schrute", Age = 40 },
+                    // Add more landlords as needed
+                    new Landlord { FirstName = "Pam", LastName = "Beesly", Age = 35 },
+                    new Landlord { FirstName = "Jim", LastName = "Halpert", Age = 36 },
+                    new Landlord { FirstName = "Stanley", LastName = "Hudson", Age = 60 },
+                    new Landlord { FirstName = "Angela", LastName = "Martin", Age = 38 },
+                    new Landlord { FirstName = "Kevin", LastName = "Malone", Age = 45 },
+                    new Landlord { FirstName = "Oscar", LastName = "Martinez", Age = 42 },
+                    new Landlord { FirstName = "Creed", LastName = "Bratton", Age = 60 },
+                    new Landlord { FirstName = "Ryan", LastName = "Howard", Age = 33 }
+                };
                 context.Landlord.AddRange(landlords);
                 context.SaveChanges();
             }
@@ -86,13 +86,13 @@ namespace cSharpAdvanced_georgeWahba_s1185726.Data
             {
                 var images = new[]
                 {
-            new Image { Url = "https://example.com/image1.jpg", IsCover = true, LocationId = 1 },
-            // Add more images as needed
-            new Image { Url = "https://example.com/image2.jpg", IsCover = false, LocationId = 2 },
-            new Image { Url = "https://example.com/image3.jpg", IsCover = false, LocationId = 3 },
-            new Image { Url = "https://example.com/image4.jpg", IsCover = false, LocationId = 4 },
-            new Image { Url = "https://example.com/image5.jpg", IsCover = false, LocationId = 5 }
-        };
+                    new Image { Url = "https://example.com/image1.jpg", IsCover = true, LocationId = 1 },
+                    // Add more images as needed
+                    new Image { Url = "https://example.com/image2.jpg", IsCover = false, LocationId = 2 },
+                    new Image { Url = "https://example.com/image3.jpg", IsCover = false, LocationId = 3 },
+                    new Image { Url = "https://example.com/image4.jpg", IsCover = false, LocationId = 4 },
+                    new Image { Url = "https://example.com/image5.jpg", IsCover = false, LocationId = 5 }
+                };
                 context.Image.AddRange(images);
                 context.SaveChanges();
             }
@@ -104,13 +104,13 @@ namespace cSharpAdvanced_georgeWahba_s1185726.Data
             {
                 var reservations = new[]
                 {
-            new Reservation { StartDate = DateTime.Now.AddDays(1), EndDate = DateTime.Now.AddDays(7), LocationId = 1, CustomerId = 1, Discount = 0 },
-            // Add more reservations as needed
-            new Reservation { StartDate = DateTime.Now.AddDays(2), EndDate = DateTime.Now.AddDays(8), LocationId = 2, CustomerId = 2, Discount = 0 },
-            new Reservation { StartDate = DateTime.Now.AddDays(3), EndDate = DateTime.Now.AddDays(9), LocationId = 3, CustomerId = 3, Discount = 0 },
-            new Reservation { StartDate = DateTime.Now.AddDays(4), EndDate = DateTime.Now.AddDays(10), LocationId = 4, CustomerId = 4, Discount = 0 },
-            new Reservation { StartDate = DateTime.Now.AddDays(5), EndDate = DateTime.Now.AddDays(11), LocationId = 5, CustomerId = 5, Discount = 0 }
-        };
+                    new Reservation { StartDate = DateTime.Now.AddDays(1), EndDate = DateTime.Now.AddDays(7), LocationId = 1, CustomerId = 1, Discount = 0 },
+                    // Add more reservations as needed
+                    new Reservation { StartDate = DateTime.Now.AddDays(2), EndDate = DateTime.Now.AddDays(8), LocationId = 2, CustomerId = 2, Discount = 0 },
+                    new Reservation { StartDate = DateTime.Now.AddDays(3), EndDate = DateTime.Now.AddDays(9), LocationId = 3, CustomerId = 3, Discount = 0 },
+                    new Reservation { StartDate = DateTime.Now.AddDays(4), EndDate = DateTime.Now.AddDays(10), LocationId = 4, CustomerId = 4, Discount = 0 },
+                    new Reservation { StartDate = DateTime.Now.AddDays(5), EndDate = DateTime.Now.AddDays(11), LocationId = 5, CustomerId = 5, Discount = 0 }
+                };
                 context.Reservation.AddRange(reservations);
                 context.SaveChanges();
             }

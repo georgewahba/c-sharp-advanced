@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using cSharpAdvanced_georgeWahba_s1185726.Data;
 using cSharpAdvanced_georgeWahba_s1185726.Models;
+using cSharpAdvanced_georgeWahba_s1185726.Repositories; // Add this namespace
 using cSharpAdvanced_georgeWahba_s1185726.Services;
 
 namespace cSharpAdvanced_georgeWahba_s1185726.Controllers
@@ -15,30 +16,29 @@ namespace cSharpAdvanced_georgeWahba_s1185726.Controllers
     [ApiController]
     public class LandlordsController : ControllerBase
     {
-        private readonly cSharpAdvanced_georgeWahba_s1185726Context _context;
+        private readonly ILandlordRepository _landlordRepository;
+        private readonly cSharpAdvanced_georgeWahba_s1185726Context _context; // Inject the context
+        private readonly SearchService _searchService;
 
-        public LandlordsController(cSharpAdvanced_georgeWahba_s1185726Context context)
+        public LandlordsController(ILandlordRepository landlordRepository, cSharpAdvanced_georgeWahba_s1185726Context context, SearchService searchService)
         {
+            _landlordRepository = landlordRepository;
             _context = context;
+            _searchService = searchService;
         }
 
         // GET: api/Landlords
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Landlord>>> GetLandlord()
         {
-          if (_context.Landlord == null)
-          {
-              return NotFound();
-          }
-            return await _context.Landlord.ToListAsync();
+            var landlords = await _landlordRepository.GetAllLandlords();
+            return Ok(landlords);
         }
 
         [HttpGet("locations")]
         public ActionResult<IEnumerable<Location>> GetAllLocations()
         {
-            var searchService = new SearchService(_context);
-            var locations = searchService.GetAllLocations();
-
+            var locations = _searchService.GetAllLocations(_context); // Pass the context to the method
             if (locations == null || !locations.Any())
             {
                 return NotFound("No locations found.");
@@ -51,22 +51,15 @@ namespace cSharpAdvanced_georgeWahba_s1185726.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Landlord>> GetLandlord(int id)
         {
-          if (_context.Landlord == null)
-          {
-              return NotFound();
-          }
-            var landlord = await _context.Landlord.FindAsync(id);
-
+            var landlord = await _landlordRepository.GetLandlordById(id);
             if (landlord == null)
             {
                 return NotFound();
             }
-
-            return landlord;
+            return Ok(landlord);
         }
 
         // PUT: api/Landlords/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
         public async Task<IActionResult> PutLandlord(int id, Landlord landlord)
         {
@@ -75,65 +68,34 @@ namespace cSharpAdvanced_georgeWahba_s1185726.Controllers
                 return BadRequest();
             }
 
-            _context.Entry(landlord).State = EntityState.Modified;
-
-            try
+            var updated = await _landlordRepository.UpdateLandlord(landlord);
+            if (!updated)
             {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!LandlordExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                return NotFound();
             }
 
             return NoContent();
         }
 
         // POST: api/Landlords
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         public async Task<ActionResult<Landlord>> PostLandlord(Landlord landlord)
         {
-          if (_context.Landlord == null)
-          {
-              return Problem("Entity set 'cSharpAdvanced_georgeWahba_s1185726Context.Landlord'  is null.");
-          }
-            _context.Landlord.Add(landlord);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetLandlord", new { id = landlord.Id }, landlord);
+            var createdLandlord = await _landlordRepository.AddLandlord(landlord);
+            return CreatedAtAction("GetLandlord", new { id = createdLandlord.Id }, createdLandlord);
         }
 
         // DELETE: api/Landlords/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteLandlord(int id)
         {
-            if (_context.Landlord == null)
+            var deleted = await _landlordRepository.DeleteLandlord(id);
+            if (!deleted)
             {
                 return NotFound();
             }
-            var landlord = await _context.Landlord.FindAsync(id);
-            if (landlord == null)
-            {
-                return NotFound();
-            }
-
-            _context.Landlord.Remove(landlord);
-            await _context.SaveChangesAsync();
 
             return NoContent();
-        }
-
-        private bool LandlordExists(int id)
-        {
-            return (_context.Landlord?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }

@@ -14,10 +14,11 @@ namespace cSharpAdvanced_georgeWahba_s1185726.Services
             _context = context;
         }
 
-        public IEnumerable<Location> GetAllLocations()
+        public IEnumerable<Location> GetAllLocations(cSharpAdvanced_georgeWahba_s1185726Context context)
         {
-            return _context.Location.ToList();
+            return context.Location.ToList();
         }
+
         public IEnumerable<Location> SearchLocations(string searchTerm)
         {
             // Perform a basic search by location title or subtitle

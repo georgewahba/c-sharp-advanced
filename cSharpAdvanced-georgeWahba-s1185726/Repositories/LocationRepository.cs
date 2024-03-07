@@ -14,7 +14,7 @@ namespace cSharpAdvanced_georgeWahba_s1185726.Repositories
 
         public LocationRepository(cSharpAdvanced_georgeWahba_s1185726Context context)
         {
-            _context = context;
+                _context = context;
         }
 
         public async Task<IEnumerable<Location>> GetAllLocations()
