@@ -1,22 +1,21 @@
 ﻿using AutoMapper;
 using cSharpAdvanced_georgeWahba_s1185726.DTOs;
 using cSharpAdvanced_georgeWahba_s1185726.Models;
-using System.Linq;
 
 public class MappingProfile : Profile
 {
     public MappingProfile()
     {
         CreateMap<Location, LocationDTO>()
-            .ForMember(dest => dest.ImageURL, opt => opt.MapFrom(src => GetImageURL(src)))
-            .ForMember(dest => dest.LandlordAvatarURL, opt => opt.MapFrom(src => GetLandlordAvatarUrl(src)));
+            .ForMember(dest => dest.ImageURL, opt => opt.MapFrom(src => GetImageURL(src.Images)))
+            .ForMember(dest => dest.LandlordAvatarURL, opt => opt.MapFrom(src => GetLandlordAvatarUrl(src.Images)));
     }
 
-    private string GetImageURL(Location src)
+    private string GetImageURL(IEnumerable<Image> images)
     {
-        if (src.Images != null)
+        if (images != null)
         {
-            var coverImage = src.Images.FirstOrDefault(img => img.IsCover);
+            var coverImage = images.FirstOrDefault(img => img.IsCover);
             if (coverImage != null)
             {
                 return coverImage.Url;
@@ -25,11 +24,15 @@ public class MappingProfile : Profile
         return null;
     }
 
-    private string GetLandlordAvatarUrl(Location src)
+    private string GetLandlordAvatarUrl(IEnumerable<Image> images)
     {
-        if (src.Landlord != null && src.Landlord.Avatar != null)
+        if (images != null)
         {
-            return src.Landlord.Avatar.Url;
+            var avatarImage = images.FirstOrDefault(img => !img.IsCover);
+            if (avatarImage != null)
+            {
+                return avatarImage.Url;
+            }
         }
         return null;
     }

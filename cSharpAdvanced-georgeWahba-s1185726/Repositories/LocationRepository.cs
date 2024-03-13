@@ -19,7 +19,11 @@ namespace cSharpAdvanced_georgeWahba_s1185726.Repositories
 
         public async Task<IEnumerable<Location>> GetAllLocations()
         {
-            return await _context.Location.ToListAsync();
+            return await _context.Location
+                .Include(location => location.Landlord)
+                .Include(location => location.Images)
+                .ToListAsync();
+
         }
 
         public async Task<Location> GetLocationById(int id)
@@ -33,7 +37,7 @@ namespace cSharpAdvanced_georgeWahba_s1185726.Repositories
             await _context.SaveChangesAsync();
             return location;
         }
-
+            
         public async Task<bool> UpdateLocation(Location location)
         {
             _context.Entry(location).State = EntityState.Modified;

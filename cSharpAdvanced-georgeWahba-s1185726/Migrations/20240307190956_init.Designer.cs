@@ -12,7 +12,7 @@ using cSharpAdvanced_georgeWahba_s1185726.Data;
 namespace cSharpAdvanced_georgeWahba_s1185726.Migrations
 {
     [DbContext(typeof(cSharpAdvanced_georgeWahba_s1185726Context))]
-    [Migration("20240227095630_init")]
+    [Migration("20240307190956_init")]
     partial class init
     {
         /// <inheritdoc />

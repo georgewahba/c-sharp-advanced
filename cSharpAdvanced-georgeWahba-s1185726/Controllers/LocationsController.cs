@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using cSharpAdvanced_georgeWahba_s1185726.Data;
 using cSharpAdvanced_georgeWahba_s1185726.DTOs;
 using cSharpAdvanced_georgeWahba_s1185726.Models;
+using cSharpAdvanced_georgeWahba_s1185726.Repositories;
 
 namespace cSharpAdvanced_georgeWahba_s1185726.Controllers
 {
@@ -14,28 +15,42 @@ namespace cSharpAdvanced_georgeWahba_s1185726.Controllers
     [ApiController]
     public class LocationsController : ControllerBase
     {
+        private ILocationRepository locationRepository;
         private readonly cSharpAdvanced_georgeWahba_s1185726Context _context;
         private readonly IMapper _mapper;
 
         public LocationsController(cSharpAdvanced_georgeWahba_s1185726Context context, IMapper mapper)
         {
+            locationRepository = new LocationRepository(context);
             _context = context;
             _mapper = mapper;
         }
 
+        // GET: api/Locations/GetAll
+        [HttpGet("GetAll")]
+
+        public async Task<ActionResult<IEnumerable<Location>>> GetLocation()
+        {
+            if (_context.Location == null)
+            {
+                return NotFound();
+            }
+            return await _context.Location.ToListAsync();
+        }
         // GET: api/Locations
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<LocationDTO>>> GetLocation()
+        public async Task<ActionResult<IEnumerable<LocationDTO>>> GetAllLocations()
         {
-            var locations = await _context.Location.ToListAsync();
+            var locations = await locationRepository.GetAllLocations();
             if (locations == null || !locations.Any())
             {
                 return NotFound();
             }
 
             var mappedLocations = _mapper.Map<IEnumerable<LocationDTO>>(locations);
-            return Ok(mappedLocations);
+            return Ok(_mapper.Map<List<LocationDTO>>(locations));
         }
+
 
         // GET: api/Locations/5
         [HttpGet("{id}")]
