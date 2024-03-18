@@ -89,7 +89,7 @@ namespace cSharpAdvanced_georgeWahba_s1185726.Data
                     new Image { Url = "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=1000&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTZ8fHBvcnRyYWl0fGVufDB8fDB8fHww", IsCover = false, LocationId = 1 },
                     new Image { Url = "https://cf.bstatic.com/xdata/images/hotel/max1024x768/234237054.jpg?k=d7022afb61775bff37732ee9ab16b82d161de36c3da2637d0b41a68275dd9ef8&o=&hp=1", IsCover = true, LocationId = 1 },
                     new Image { Url = "https://www.daniosorio.com/wp-content/uploads/2018/03/portrait-faces-and-photography-french-woman-eug%C3%A9nie.jpg", IsCover = false, LocationId = 2 },
-                    new Image { Url = "https://i.pinimg.com/564x/f1/03/c7/f103c7685932f2d0990c88c4990665cd.jpgg", IsCover = true, LocationId = 2 },
+                    new Image { Url = "https://seasidecottages.com/wp-content/uploads/2021/11/pauls-cottage-from-the-bay-1.jpg", IsCover = true, LocationId = 2 },
                     new Image { Url = "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=1000&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8cGVvcGxlJTIwcG9ydHJhaXRzfGVufDB8fDB8fHww", IsCover = false, LocationId = 3 },
                     new Image { Url = "https://www.alpsinluxury.com/blog/wp-content/uploads/2021/02/HD-exterieur-nuit-001.jpg", IsCover = true, LocationId = 3 },
                     new Image { Url = "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=1000&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8cGVvcGxlJTIwcG9ydHJhaXRzfGVufDB8fDB8fHww", IsCover = false, LocationId = 4 },

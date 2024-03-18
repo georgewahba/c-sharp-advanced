@@ -1,13 +1,11 @@
-﻿using AutoMapper;
+﻿using System;
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.OpenApi.Models;
 using cSharpAdvanced_georgeWahba_s1185726.Data;
 using cSharpAdvanced_georgeWahba_s1185726.Repositories;
 using cSharpAdvanced_georgeWahba_s1185726.Services;
-using cSharpAdvanced_georgeWahba_s1185726.DTOs;
-using cSharpAdvanced_georgeWahba_s1185726.Models;
-using System;
-using System.Linq;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -29,7 +27,6 @@ builder.Services.AddScoped<SearchService>();
 // Add controllers and other necessary services
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
 
 builder.Services.AddCors(options =>
 {
@@ -42,6 +39,12 @@ builder.Services.AddCors(options =>
         });
 });
 
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
+    c.SwaggerDoc("v2", new OpenApiInfo { Title = "My API", Version = "v2" });
+});
+
 var app = builder.Build();
 
 app.UseCors("AllowSpecificOrigin");
@@ -49,7 +52,11 @@ app.UseCors("AllowSpecificOrigin");
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+        c.SwaggerEndpoint("/swagger/v2/swagger.json", "My API V2");
+    });
 }
 
 app.UseHttpsRedirection();
