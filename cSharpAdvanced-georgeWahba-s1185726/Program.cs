@@ -8,6 +8,7 @@ using cSharpAdvanced_georgeWahba_s1185726.DTOs;
 using cSharpAdvanced_georgeWahba_s1185726.Models;
 using System;
 using System.Linq;
+using Microsoft.AspNetCore.Mvc;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -41,6 +42,14 @@ builder.Services.AddCors(options =>
                     .AllowAnyMethod();
         });
 });
+
+builder.Services.AddApiVersioning(options =>
+{
+    options.AssumeDefaultVersionWhenUnspecified = true;
+    options.DefaultApiVersion = new ApiVersion(1, 0);
+    options.ReportApiVersions = true;
+});
+
 
 var app = builder.Build();
 

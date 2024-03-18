@@ -253,3 +253,4 @@ C:\Users\georg\OneDrive - Windesheim Office365\jaar_2\c_sharp\c-sharp-advanced\c
 C:\Users\georg\OneDrive - Windesheim Office365\jaar_2\c_sharp\c-sharp-advanced\cSharpAdvanced-georgeWahba-s1185726\obj\Debug\net7.0\cSharpAdvanced-georgeWahba-s1185726.genruntimeconfig.cache
 C:\Users\georg\OneDrive - Windesheim Office365\jaar_2\c_sharp\c-sharp-advanced\cSharpAdvanced-georgeWahba-s1185726\obj\Debug\net7.0\ref\cSharpAdvanced-georgeWahba-s1185726.dll
 C:\Users\georg\OneDrive - Windesheim Office365\jaar_2\c_sharp\c-sharp-advanced\cSharpAdvanced-georgeWahba-s1185726\bin\Debug\net7.0\AutoMapper.dll
+C:\Users\georg\OneDrive - Windesheim Office365\jaar_2\c_sharp\c-sharp-advanced\cSharpAdvanced-georgeWahba-s1185726\bin\Debug\net7.0\Microsoft.AspNetCore.Mvc.Versioning.dll

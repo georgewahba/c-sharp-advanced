@@ -9,7 +9,14 @@ public class MappingProfile : Profile
         CreateMap<Location, LocationDTO>()
             .ForMember(dest => dest.ImageURL, opt => opt.MapFrom(src => GetImageURL(src.Images)))
             .ForMember(dest => dest.LandlordAvatarURL, opt => opt.MapFrom(src => GetLandlordAvatarUrl(src.Images)));
+       
+        CreateMap<Location, Location2DTO>()
+        .ForMember(dest => dest.ImageURL, opt => opt.MapFrom(src => GetImageURL(src.Images)))
+        .ForMember(dest => dest.LandlordAvatarURL, opt => opt.MapFrom(src => GetLandlordAvatarUrl(src.Images)))
+        .ForMember(dest => dest.Price, opt => opt.MapFrom(src => src.PricePerDay)) // Direct mapping, assuming Price is the same as PricePerDay
+        .ForMember(dest => dest.Type, opt => opt.MapFrom(src => src.Type)); // Direct mapping
     }
+
 
     private string GetImageURL(IEnumerable<Image> images)
     {
