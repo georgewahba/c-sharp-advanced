@@ -11,45 +11,48 @@ using cSharpAdvanced_georgeWahba_s1185726.Repositories;
 
 namespace cSharpAdvanced_georgeWahba_s1185726.Controllers
 {
-    /// <summary>
-    /// Controller for managing locations.
-    /// </summary>
     [Route("api/[controller]")]
     [ApiController]
     public class LocationsController : ControllerBase
     {
-        private readonly ILocationRepository _locationRepository;
+        private ILocationRepository locationRepository;
         private readonly cSharpAdvanced_georgeWahba_s1185726Context _context;
         private readonly IMapper _mapper;
 
-        public LocationsController(cSharpAdvanced_georgeWahba_s1185726Context context, IMapper mapper, ILocationRepository locationRepository)
+        public LocationsController(cSharpAdvanced_georgeWahba_s1185726Context context, IMapper mapper)
         {
+            locationRepository = new LocationRepository(context);
             _context = context;
             _mapper = mapper;
-            _locationRepository = locationRepository;
         }
 
-        /// <summary>
-        /// Gets all locations.
-        /// </summary>
-        /// <returns>A list of locations.</returns>
+        // GET: api/Locations/GetAll
         [HttpGet("GetAll")]
-        public async Task<ActionResult<IEnumerable<Location>>> GetAllLocations()
+
+        public async Task<ActionResult<IEnumerable<Location>>> GetLocation()
         {
-            var locations = await _locationRepository.GetAllLocations();
+            if (_context.Location == null)
+            {
+                return NotFound();
+            }
+            return await _context.Location.ToListAsync();
+        }
+        // GET: api/Locations
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<LocationDTO>>> GetAllLocations()
+        {
+            var locations = await locationRepository.GetAllLocations();
             if (locations == null || !locations.Any())
             {
                 return NotFound();
             }
 
-            return Ok(locations);
+            var mappedLocations = _mapper.Map<IEnumerable<LocationDTO>>(locations);
+            return Ok(_mapper.Map<List<LocationDTO>>(locations));
         }
 
-        /// <summary>
-        /// Gets a location by ID.
-        /// </summary>
-        /// <param name="id">The ID of the location to retrieve.</param>
-        /// <returns>The location with the specified ID.</returns>
+
+        // GET: api/Locations/5
         [HttpGet("{id}")]
         public async Task<ActionResult<LocationDTO>> GetLocation(int id)
         {
@@ -64,12 +67,7 @@ namespace cSharpAdvanced_georgeWahba_s1185726.Controllers
             return mappedLocation;
         }
 
-        /// <summary>
-        /// Updates a location.
-        /// </summary>
-        /// <param name="id">The ID of the location to update.</param>
-        /// <param name="locationDTO">The updated location data.</param>
-        /// <returns>No content if successful.</returns>
+        // PUT: api/Locations/5
         [HttpPut("{id}")]
         public async Task<IActionResult> PutLocation(int id, LocationDTO locationDTO)
         {
@@ -101,11 +99,7 @@ namespace cSharpAdvanced_georgeWahba_s1185726.Controllers
             return NoContent();
         }
 
-        /// <summary>
-        /// Creates a new location.
-        /// </summary>
-        /// <param name="locationDTO">The location data to create.</param>
-        /// <returns>The created location.</returns>
+        // POST: api/Locations
         [HttpPost]
         public async Task<ActionResult<LocationDTO>> PostLocation(LocationDTO locationDTO)
         {
@@ -114,14 +108,10 @@ namespace cSharpAdvanced_georgeWahba_s1185726.Controllers
             _context.Location.Add(location);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(GetLocation), new { id = location.Id }, locationDTO);
+            return CreatedAtAction("GetLocation", new { id = location.Id }, locationDTO);
         }
 
-        /// <summary>
-        /// Deletes a location.
-        /// </summary>
-        /// <param name="id">The ID of the location to delete.</param>
-        /// <returns>No content if successful.</returns>
+        // DELETE: api/Locations/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteLocation(int id)
         {
