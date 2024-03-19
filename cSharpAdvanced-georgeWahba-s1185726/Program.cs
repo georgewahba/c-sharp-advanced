@@ -1,14 +1,13 @@
-﻿using AutoMapper;
+﻿using System;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
+using AutoMapper;
 using cSharpAdvanced_georgeWahba_s1185726.Data;
-using cSharpAdvanced_georgeWahba_s1185726.Repositories;
-using cSharpAdvanced_georgeWahba_s1185726.Services;
 using cSharpAdvanced_georgeWahba_s1185726.DTOs;
 using cSharpAdvanced_georgeWahba_s1185726.Models;
-using System;
-using System.Linq;
-using Microsoft.AspNetCore.Mvc;
+using cSharpAdvanced_georgeWahba_s1185726.Repositories;
+using cSharpAdvanced_georgeWahba_s1185726.Services;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,10 +26,32 @@ builder.Services.AddScoped<ILocationRepository, LocationRepository>();
 builder.Services.AddScoped<IReservationRepository, ReservationRepository>();
 builder.Services.AddScoped<SearchService>();
 
-// Add controllers and other necessary services
-builder.Services.AddControllers();
+// Add controllers with JSON options for handling circular references
+builder.Services.AddControllers()
+    .AddJsonOptions(opt =>
+    {
+        opt.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+    });
+
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(options =>
+{
+    // Define Swagger document for version 1
+    options.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
+    {
+        Title = "API Version 1",
+        Version = "v1"
+    });
+
+    // Define Swagger document for version 2
+    options.SwaggerDoc("v2", new Microsoft.OpenApi.Models.OpenApiInfo
+    {
+        Title = "API Version 2",
+        Version = "v2"
+    });
+
+    options.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
+});
 
 builder.Services.AddCors(options =>
 {
@@ -50,21 +71,23 @@ builder.Services.AddApiVersioning(options =>
     options.ReportApiVersions = true;
 });
 
-
 var app = builder.Build();
 
+// Configure middleware
 app.UseCors("AllowSpecificOrigin");
 
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(options =>
+    {
+        options.SwaggerEndpoint("/swagger/v1/swagger.json", "API Version 1");
+        options.SwaggerEndpoint("/swagger/v2/swagger.json", "API Version 2");
+    });
 }
 
 app.UseHttpsRedirection();
-
 app.UseAuthorization();
-
 app.MapControllers();
 
 app.Run();

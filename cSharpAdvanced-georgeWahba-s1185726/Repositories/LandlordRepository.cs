@@ -1,6 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using cSharpAdvanced_georgeWahba_s1185726.Data;
 using cSharpAdvanced_georgeWahba_s1185726.Models;
@@ -17,9 +16,9 @@ namespace cSharpAdvanced_georgeWahba_s1185726.Repositories
             _context = context;
         }
 
-        public async Task<IEnumerable<Landlord>> GetAllLandlords()
+        public async Task<IEnumerable<Landlord>> GetAllLandlords(CancellationToken cancellationToken)
         {
-            return await _context.Landlord.ToListAsync();
+            return await _context.Landlord.ToListAsync(cancellationToken);
         }
 
         public async Task<Landlord> GetLandlordById(int id)

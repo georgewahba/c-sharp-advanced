@@ -1,13 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
-using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using cSharpAdvanced_georgeWahba_s1185726.Data;
 using cSharpAdvanced_georgeWahba_s1185726.DTOs;
 using cSharpAdvanced_georgeWahba_s1185726.Models;
 using cSharpAdvanced_georgeWahba_s1185726.Repositories;
+using AutoMapper;
+using Microsoft.EntityFrameworkCore;
+using cSharpAdvanced_georgeWahba_s1185726.Data;
 
 namespace cSharpAdvanced_georgeWahba_s1185726.Controllers
 {
@@ -15,48 +16,49 @@ namespace cSharpAdvanced_georgeWahba_s1185726.Controllers
     [ApiController]
     public class LocationsController : ControllerBase
     {
-        private ILocationRepository locationRepository;
-        private readonly cSharpAdvanced_georgeWahba_s1185726Context _context;
+        private ILocationRepository _locationRepository;
         private readonly IMapper _mapper;
+        private readonly cSharpAdvanced_georgeWahba_s1185726Context _context;
 
-        public LocationsController(cSharpAdvanced_georgeWahba_s1185726Context context, IMapper mapper)
+        public LocationsController(ILocationRepository locationRepository, IMapper mapper, cSharpAdvanced_georgeWahba_s1185726Context context)
         {
-            locationRepository = new LocationRepository(context);
-            _context = context;
+            _locationRepository = locationRepository;
             _mapper = mapper;
+            _context = context; 
         }
 
         // GET: api/Locations/GetAll
         [HttpGet("GetAll")]
-
-        public async Task<ActionResult<IEnumerable<Location>>> GetLocation()
+        public async Task<ActionResult<IEnumerable<Location>>> GetLocation(CancellationToken cancellationToken)
         {
-            if (_context.Location == null)
+            var locations = await _locationRepository.GetAllLocations(cancellationToken);
+            if (locations == null || !locations.Any())
             {
                 return NotFound();
             }
-            return await _context.Location.ToListAsync();
+
+            return Ok(locations);
         }
+
         // GET: api/Locations
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<LocationDTO>>> GetAllLocations()
+        public async Task<ActionResult<IEnumerable<LocationDTO>>> GetAllLocations(CancellationToken cancellationToken)
         {
-            var locations = await locationRepository.GetAllLocations();
+            var locations = await _locationRepository.GetAllLocations(cancellationToken);
             if (locations == null || !locations.Any())
             {
                 return NotFound();
             }
 
             var mappedLocations = _mapper.Map<IEnumerable<LocationDTO>>(locations);
-            return Ok(_mapper.Map<List<LocationDTO>>(locations));
+            return Ok(mappedLocations);
         }
-
 
         // GET: api/Locations/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<LocationDTO>> GetLocation(int id)
+        public async Task<ActionResult<LocationDTO>> GetLocation(int id, CancellationToken cancellationToken)
         {
-            var location = await _context.Location.FindAsync(id);
+            var location = await _locationRepository.GetLocationById(id, cancellationToken);
 
             if (location == null)
             {
@@ -69,31 +71,21 @@ namespace cSharpAdvanced_georgeWahba_s1185726.Controllers
 
         // PUT: api/Locations/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutLocation(int id, LocationDTO locationDTO)
+        public async Task<IActionResult> PutLocation(int id, LocationDTO locationDTO, CancellationToken cancellationToken)
         {
-            if (id != locationDTO.Id)
+            var existingLocation = await _locationRepository.GetLocationById(id, cancellationToken);
+            if (existingLocation == null)
             {
-                return BadRequest();
+                return NotFound();
             }
 
             var location = _mapper.Map<Location>(locationDTO);
+            location.Id = id;
 
-            _context.Entry(location).State = EntityState.Modified;
-
-            try
+            var success = await _locationRepository.UpdateLocation(location, cancellationToken);
+            if (!success)
             {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!LocationExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                return BadRequest();
             }
 
             return NoContent();
@@ -101,35 +93,76 @@ namespace cSharpAdvanced_georgeWahba_s1185726.Controllers
 
         // POST: api/Locations
         [HttpPost]
-        public async Task<ActionResult<LocationDTO>> PostLocation(LocationDTO locationDTO)
+        public async Task<ActionResult<LocationDTO>> PostLocation(LocationDTO locationDTO, CancellationToken cancellationToken)
         {
             var location = _mapper.Map<Location>(locationDTO);
 
-            _context.Location.Add(location);
-            await _context.SaveChangesAsync();
+            var createdLocation = await _locationRepository.AddLocation(location, cancellationToken);
 
-            return CreatedAtAction("GetLocation", new { id = location.Id }, locationDTO);
+            var mappedLocation = _mapper.Map<LocationDTO>(createdLocation);
+
+            return CreatedAtAction(nameof(GetLocation), new { id = mappedLocation.Id }, mappedLocation);
         }
 
         // DELETE: api/Locations/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteLocation(int id)
+        public async Task<IActionResult> DeleteLocation(int id, CancellationToken cancellationToken)
         {
-            var location = await _context.Location.FindAsync(id);
+            var existingLocation = await _locationRepository.GetLocationById(id, cancellationToken);
+            if (existingLocation == null)
+            {
+                return NotFound();
+            }
+
+            var success = await _locationRepository.DeleteLocation(id, cancellationToken);
+            if (!success)
+            {
+                return BadRequest();
+            }
+
+            return NoContent();
+        }
+
+        // POST: api/Locations/Search
+        [HttpPost("Search")]
+        public async Task<ActionResult<IEnumerable<Location2DTO>>> Search([FromBody] SearchRequestDTO request, CancellationToken cancellationToken)
+        {
+            var locations = await _locationRepository.SearchLocations(request, cancellationToken);
+
+            if (locations == null || !locations.Any())
+            {
+                return NotFound();
+            }
+
+            var mappedLocations = _mapper.Map<IEnumerable<Location2DTO>>(locations);
+            return Ok(mappedLocations);
+        }
+
+        // GET: api/Locations/GetMaxPrice
+        [HttpGet("GetMaxPrice")]
+        public async Task<ActionResult<MaxPriceDTO>> GetMaxPrice()
+        {
+            // Query the database to find the maximum price of locations
+            var maxPrice = await _context.Location.MaxAsync(location => (int?)location.PricePerDay) ?? 0;
+
+            var maxPriceDTO = new MaxPriceDTO { Price = maxPrice };
+
+            return Ok(maxPriceDTO);
+        }
+
+        // GET: api/Locations/GetDetails/{id}
+        [HttpGet("GetDetails/{id}")]
+        public async Task<ActionResult<LocationDetailsDTO>> GetDetails(int id, CancellationToken cancellationToken)
+        {
+            var location = await _locationRepository.GetLocationById(id, cancellationToken);
+
             if (location == null)
             {
                 return NotFound();
             }
 
-            _context.Location.Remove(location);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
-        }
-
-        private bool LocationExists(int id)
-        {
-            return _context.Location.Any(e => e.Id == id);
+            var locationDetailsDTO = _mapper.Map<LocationDetailsDTO>(location);
+            return locationDetailsDTO;
         }
     }
 }

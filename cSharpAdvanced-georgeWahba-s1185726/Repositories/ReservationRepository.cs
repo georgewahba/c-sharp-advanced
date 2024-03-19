@@ -1,6 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using cSharpAdvanced_georgeWahba_s1185726.Data;
 using cSharpAdvanced_georgeWahba_s1185726.Models;
@@ -17,29 +16,29 @@ namespace cSharpAdvanced_georgeWahba_s1185726.Repositories
             _context = context;
         }
 
-        public async Task<IEnumerable<Reservation>> GetAllReservations()
+        public async Task<IEnumerable<Reservation>> GetAllReservations(CancellationToken cancellationToken)
         {
-            return await _context.Reservation.ToListAsync();
+            return await _context.Reservation.ToListAsync(cancellationToken);
         }
 
-        public async Task<Reservation> GetReservationById(int id)
+        public async Task<Reservation> GetReservationById(int id, CancellationToken cancellationToken)
         {
-            return await _context.Reservation.FindAsync(id);
+            return await _context.Reservation.FindAsync(new object[] { id }, cancellationToken);
         }
 
-        public async Task<Reservation> AddReservation(Reservation reservation)
+        public async Task<Reservation> AddReservation(Reservation reservation, CancellationToken cancellationToken)
         {
             _context.Reservation.Add(reservation);
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync(cancellationToken);
             return reservation;
         }
 
-        public async Task<bool> UpdateReservation(Reservation reservation)
+        public async Task<bool> UpdateReservation(Reservation reservation, CancellationToken cancellationToken)
         {
             _context.Entry(reservation).State = EntityState.Modified;
             try
             {
-                await _context.SaveChangesAsync();
+                await _context.SaveChangesAsync(cancellationToken);
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -55,16 +54,16 @@ namespace cSharpAdvanced_georgeWahba_s1185726.Repositories
             return true;
         }
 
-        public async Task<bool> DeleteReservation(int id)
+        public async Task<bool> DeleteReservation(int id, CancellationToken cancellationToken)
         {
-            var reservation = await _context.Reservation.FindAsync(id);
+            var reservation = await _context.Reservation.FindAsync(new object[] { id }, cancellationToken);
             if (reservation == null)
             {
                 return false;
             }
 
             _context.Reservation.Remove(reservation);
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync(cancellationToken);
             return true;
         }
 

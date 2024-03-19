@@ -1,14 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using cSharpAdvanced_georgeWahba_s1185726.Data;
 using cSharpAdvanced_georgeWahba_s1185726.Models;
-using cSharpAdvanced_georgeWahba_s1185726.Repositories; // Add this namespace
+using cSharpAdvanced_georgeWahba_s1185726.Repositories;
 using cSharpAdvanced_georgeWahba_s1185726.Services;
+using cSharpAdvanced_georgeWahba_s1185726.Data;
 
 namespace cSharpAdvanced_georgeWahba_s1185726.Controllers
 {
@@ -17,7 +15,7 @@ namespace cSharpAdvanced_georgeWahba_s1185726.Controllers
     public class LandlordsController : ControllerBase
     {
         private readonly ILandlordRepository _landlordRepository;
-        private readonly cSharpAdvanced_georgeWahba_s1185726Context _context; // Inject the context
+        private readonly cSharpAdvanced_georgeWahba_s1185726Context _context;
         private readonly SearchService _searchService;
 
         public LandlordsController(ILandlordRepository landlordRepository, cSharpAdvanced_georgeWahba_s1185726Context context, SearchService searchService)
@@ -29,16 +27,16 @@ namespace cSharpAdvanced_georgeWahba_s1185726.Controllers
 
         // GET: api/Landlords
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Landlord>>> GetLandlord()
+        public async Task<ActionResult<IEnumerable<Landlord>>> GetLandlord(CancellationToken cancellationToken)
         {
-            var landlords = await _landlordRepository.GetAllLandlords();
+            var landlords = await _landlordRepository.GetAllLandlords(cancellationToken);
             return Ok(landlords);
         }
 
         [HttpGet("locations")]
         public ActionResult<IEnumerable<Location>> GetAllLocations()
         {
-            var locations = _searchService.GetAllLocations(_context); // Pass the context to the method
+            var locations = _searchService.GetAllLocations(_context);
             if (locations == null || !locations.Any())
             {
                 return NotFound("No locations found.");

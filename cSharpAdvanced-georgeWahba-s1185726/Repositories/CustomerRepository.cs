@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using cSharpAdvanced_georgeWahba_s1185726.Data;
 using cSharpAdvanced_georgeWahba_s1185726.Models;
@@ -17,29 +17,29 @@ namespace cSharpAdvanced_georgeWahba_s1185726.Repositories
             _context = context;
         }
 
-        public async Task<IEnumerable<Customer>> GetAllCustomers()
+        public async Task<IEnumerable<Customer>> GetAllCustomers(CancellationToken cancellationToken)
         {
-            return await _context.Customer.ToListAsync();
+            return await _context.Customer.ToListAsync(cancellationToken);
         }
 
-        public async Task<Customer> GetCustomerById(int id)
+        public async Task<Customer> GetCustomerById(int id, CancellationToken cancellationToken)
         {
-            return await _context.Customer.FindAsync(id);
+            return await _context.Customer.FindAsync(new object[] { id }, cancellationToken);
         }
 
-        public async Task<Customer> AddCustomer(Customer customer)
+        public async Task<Customer> AddCustomer(Customer customer, CancellationToken cancellationToken)
         {
             _context.Customer.Add(customer);
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync(cancellationToken);
             return customer;
         }
 
-        public async Task<bool> UpdateCustomer(Customer customer)
+        public async Task<bool> UpdateCustomer(Customer customer, CancellationToken cancellationToken)
         {
             _context.Entry(customer).State = EntityState.Modified;
             try
             {
-                await _context.SaveChangesAsync();
+                await _context.SaveChangesAsync(cancellationToken);
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -55,16 +55,16 @@ namespace cSharpAdvanced_georgeWahba_s1185726.Repositories
             return true;
         }
 
-        public async Task<bool> DeleteCustomer(int id)
+        public async Task<bool> DeleteCustomer(int id, CancellationToken cancellationToken)
         {
-            var customer = await _context.Customer.FindAsync(id);
+            var customer = await _context.Customer.FindAsync(new object[] { id }, cancellationToken);
             if (customer == null)
             {
                 return false;
             }
 
             _context.Customer.Remove(customer);
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync(cancellationToken);
             return true;
         }
 

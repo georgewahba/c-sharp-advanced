@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using cSharpAdvanced_georgeWahba_s1185726.Data;
 using cSharpAdvanced_georgeWahba_s1185726.Models;
 using cSharpAdvanced_georgeWahba_s1185726.Repositories;
 
@@ -15,7 +12,7 @@ namespace cSharpAdvanced_georgeWahba_s1185726.Controllers
     [ApiController]
     public class ImagesController : ControllerBase
     {
-        private readonly IImageRepository _imageRepository; 
+        private readonly IImageRepository _imageRepository;
 
         public ImagesController(IImageRepository imageRepository)
         {
@@ -24,17 +21,17 @@ namespace cSharpAdvanced_georgeWahba_s1185726.Controllers
 
         // GET: api/Images
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Image>>> GetImage()
+        public async Task<ActionResult<IEnumerable<Image>>> GetImage(CancellationToken cancellationToken)
         {
-            var images = await _imageRepository.GetAllImages();
+            var images = await _imageRepository.GetAllImages(cancellationToken);
             return Ok(images);
         }
 
         // GET: api/Images/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Image>> GetImage(int id)
+        public async Task<ActionResult<Image>> GetImage(int id, CancellationToken cancellationToken)
         {
-            var image = await _imageRepository.GetImageById(id);
+            var image = await _imageRepository.GetImageById(id, cancellationToken);
             if (image == null)
             {
                 return NotFound();
@@ -44,14 +41,14 @@ namespace cSharpAdvanced_georgeWahba_s1185726.Controllers
 
         // PUT: api/Images/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutImage(int id, Image image)
+        public async Task<IActionResult> PutImage(int id, Image image, CancellationToken cancellationToken)
         {
             if (id != image.Id)
             {
                 return BadRequest();
             }
 
-            var updated = await _imageRepository.UpdateImage(image);
+            var updated = await _imageRepository.UpdateImage(image, cancellationToken);
             if (!updated)
             {
                 return NotFound();
@@ -62,17 +59,17 @@ namespace cSharpAdvanced_georgeWahba_s1185726.Controllers
 
         // POST: api/Images
         [HttpPost]
-        public async Task<ActionResult<Image>> PostImage(Image image)
+        public async Task<ActionResult<Image>> PostImage(Image image, CancellationToken cancellationToken)
         {
-            var createdImage = await _imageRepository.AddImage(image);
+            var createdImage = await _imageRepository.AddImage(image, cancellationToken);
             return CreatedAtAction("GetImage", new { id = createdImage.Id }, createdImage);
         }
 
         // DELETE: api/Images/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteImage(int id)
+        public async Task<IActionResult> DeleteImage(int id, CancellationToken cancellationToken)
         {
-            var deleted = await _imageRepository.DeleteImage(id);
+            var deleted = await _imageRepository.DeleteImage(id, cancellationToken);
             if (!deleted)
             {
                 return NotFound();
