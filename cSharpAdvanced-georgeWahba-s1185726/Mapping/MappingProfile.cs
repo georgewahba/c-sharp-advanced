@@ -14,15 +14,15 @@ public class MappingProfile : Profile
         CreateMap<Location, Location2DTO>()
             .ForMember(dest => dest.ImageURL, opt => opt.MapFrom(src => GetImageURL(src.Images)))
             .ForMember(dest => dest.LandlordAvatarURL, opt => opt.MapFrom(src => GetLandlordAvatarUrl(src.Images)))
-            .ForMember(dest => dest.Price, opt => opt.MapFrom(src => src.PricePerDay)) // Direct mapping, assuming Price is the same as PricePerDay
-            .ForMember(dest => dest.Type, opt => opt.MapFrom(src => src.Type)); // Direct mapping
+            .ForMember(dest => dest.Price, opt => opt.MapFrom(src => src.PricePerDay))
+            .ForMember(dest => dest.Type, opt => opt.MapFrom(src => src.Type));
 
         CreateMap<Location, LocationDetailsDTO>()
-            .ForMember(dest => dest.Images, opt => opt.MapFrom(src => MapImages(src.Images)))
-            .ForMember(dest => dest.Landlord, opt => opt.MapFrom(src => new LandlordDTO { Name = GetLandlordName(src.Landlord), Avatar = GetLandlordAvatarUrl(src.Images) }));
+            .ForMember(dest => dest.Images, opt => opt.MapFrom(src => src.Images))
+            .ForMember(dest => dest.Landlord, opt => opt.MapFrom(src => src.Landlord));
     }
 
-    private string GetImageURL(IEnumerable<Image> images)
+    public static string GetImageURL(IEnumerable<Image> images)
     {
         if (images != null)
         {
@@ -35,16 +35,7 @@ public class MappingProfile : Profile
         return null;
     }
 
-    private string GetLandlordName(Landlord landlord)
-    {
-        if (landlord != null)
-        {
-            return $"{landlord.FirstName} {landlord.LastName}";
-        }
-        return null;
-    }
-
-    private string GetLandlordAvatarUrl(IEnumerable<Image> images)
+    public static string GetLandlordAvatarUrl(IEnumerable<Image> images)
     {
         if (images != null)
         {
@@ -55,10 +46,5 @@ public class MappingProfile : Profile
             }
         }
         return null;
-    }
-
-    private IEnumerable<ImageDTO> MapImages(IEnumerable<Image> images)
-    {
-        return images.Select(img => new ImageDTO { URL = img.Url, IsCover = img.IsCover }).ToList();
     }
 }

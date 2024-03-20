@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using cSharpAdvanced_georgeWahba_s1185726.Data;
@@ -65,6 +66,45 @@ namespace cSharpAdvanced_georgeWahba_s1185726.Repositories
             _context.Reservation.Remove(reservation);
             await _context.SaveChangesAsync(cancellationToken);
             return true;
+        }
+
+        public async Task<Customer> GetOrCreateCustomerByEmail(string email, string firstName, string lastName, CancellationToken cancellationToken)
+        {
+            var existingCustomer = await _context.Customer.FirstOrDefaultAsync(c => c.Email == email, cancellationToken);
+            if (existingCustomer != null)
+            {
+                return existingCustomer;
+            }
+            else
+            {
+                var newCustomer = new Customer { Email = email, FirstName = firstName, LastName = lastName }; // Voeg voornaam en achternaam toe
+                _context.Customer.Add(newCustomer);
+                await _context.SaveChangesAsync(cancellationToken);
+                return newCustomer;
+            }
+        }
+
+        public async Task<float> CalculateReservationPrice(Reservation reservation, CancellationToken cancellationToken)
+        {
+            var location = await _context.Location.FindAsync(reservation.LocationId);
+            if (location == null)
+            {
+                throw new InvalidOperationException("Invalid location ID");
+            }
+
+            // Calculate the number of days between the start and end dates
+            var numberOfDays = (reservation.EndDate - reservation.StartDate).Days;
+
+            // Calculate the total price based on the price per day of the location and the number of days
+            var totalPrice = location.PricePerDay * numberOfDays;
+
+            // Apply discount if available
+            if (reservation.Discount > 0 && reservation.Discount <= 1)
+            {
+                totalPrice -= totalPrice * reservation.Discount;
+            }
+
+            return totalPrice;
         }
 
         private bool ReservationExists(int id)

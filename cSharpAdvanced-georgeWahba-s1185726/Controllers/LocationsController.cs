@@ -24,7 +24,7 @@ namespace cSharpAdvanced_georgeWahba_s1185726.Controllers
         {
             _locationRepository = locationRepository;
             _mapper = mapper;
-            _context = context; 
+            _context = context;
         }
 
         // GET: api/Locations/GetAll
@@ -122,21 +122,31 @@ namespace cSharpAdvanced_georgeWahba_s1185726.Controllers
 
             return NoContent();
         }
-
         // POST: api/Locations/Search
         [HttpPost("Search")]
         public async Task<ActionResult<IEnumerable<Location2DTO>>> Search([FromBody] SearchRequestDTO request, CancellationToken cancellationToken)
         {
-            var locations = await _locationRepository.SearchLocations(request, cancellationToken);
+            // Ignore search criteria and return all locations
+            var locations = await _locationRepository.GetAllLocations(cancellationToken);
 
             if (locations == null || !locations.Any())
             {
                 return NotFound();
             }
 
-            var mappedLocations = _mapper.Map<IEnumerable<Location2DTO>>(locations);
+            // Map locations to Location2DTO objects with images
+            var mappedLocations = locations.Select(location =>
+            {
+                var locationDto = _mapper.Map<Location2DTO>(location);
+                locationDto.ImageURL = MappingProfile.GetImageURL(location.Images);
+                locationDto.LandlordAvatarURL = MappingProfile.GetLandlordAvatarUrl(location.Images);
+                return locationDto;
+            });
+
             return Ok(mappedLocations);
         }
+
+
 
         // GET: api/Locations/GetMaxPrice
         [HttpGet("GetMaxPrice")]
@@ -163,6 +173,30 @@ namespace cSharpAdvanced_georgeWahba_s1185726.Controllers
 
             var locationDetailsDTO = _mapper.Map<LocationDetailsDTO>(location);
             return locationDetailsDTO;
+        }
+
+
+        // GET: api/Locations/UnAvailableDates/{locationId}
+        [HttpGet("UnAvailableDates/{locationId}")]
+        public async Task<ActionResult<UnAvailableDatesDTO>> GetUnavailableDates(int locationId, CancellationToken cancellationToken)
+        {
+            var location = await _locationRepository.GetLocationById(locationId, cancellationToken);
+
+            if (location == null)
+            {
+                return NotFound();
+            }
+
+            // Haal onbeschikbare datums op voor de locatie
+            var unavailableDates = await _context.Reservation
+                 .Where(r => r.LocationId == locationId)
+                 .Select(r => r.StartDate) 
+                 .ToListAsync(cancellationToken);
+
+
+            var unavailableDatesDto = new UnAvailableDatesDTO { UnAvailableDates = unavailableDates };
+
+            return Ok(unavailableDatesDto);
         }
     }
 }

@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using cSharpAdvanced_georgeWahba_s1185726.Models;
 using cSharpAdvanced_georgeWahba_s1185726.Repositories;
+using AutoMapper;
 
 namespace cSharpAdvanced_georgeWahba_s1185726.Controllers
 {
@@ -15,10 +14,12 @@ namespace cSharpAdvanced_georgeWahba_s1185726.Controllers
     public class ReservationsController : ControllerBase
     {
         private readonly IReservationRepository _reservationRepository;
+        private readonly IMapper _mapper;
 
-        public ReservationsController(IReservationRepository reservationRepository)
+        public ReservationsController(IReservationRepository reservationRepository, IMapper mapper)
         {
             _reservationRepository = reservationRepository;
+            _mapper = mapper;
         }
 
         // GET: api/Reservations
@@ -61,10 +62,37 @@ namespace cSharpAdvanced_georgeWahba_s1185726.Controllers
 
         // POST: api/Reservations
         [HttpPost]
-        public async Task<ActionResult<Reservation>> PostReservation(Reservation reservation, CancellationToken cancellationToken)
+        public async Task<ActionResult<ReservationResponseDTO>> PostReservation(ReservationRequestDTO request, CancellationToken cancellationToken)
         {
+            // Zoek de klant op basis van het e-mailadres of maak een nieuwe klant aan
+            var customer = await _reservationRepository.GetOrCreateCustomerByEmail(request.Email, request.FirstName, request.LastName, cancellationToken);
+
+            // Maak een nieuwe reservering aan
+            var reservation = new Reservation
+            {
+                StartDate = request.StartDate,
+                EndDate = request.EndDate,
+                LocationId = request.LocationId,
+                CustomerId = customer.Id,
+                Discount = request.Discount ?? 0 // Als er geen korting is, stel deze dan in op 0
+            };
+
+            // Sla de reservering op in de database
             var createdReservation = await _reservationRepository.AddReservation(reservation, cancellationToken);
-            return CreatedAtAction("GetReservation", new { id = createdReservation.Id }, createdReservation);
+
+            // Bereken de prijs van de reservering
+            var price = await _reservationRepository.CalculateReservationPrice(createdReservation, cancellationToken);
+
+            // Bouw het antwoord DTO op
+            var responseDTO = new ReservationResponseDTO
+            {
+                LocationName = createdReservation.Location.Title,
+                CustomerName = $"{customer.FirstName} {customer.LastName}",
+                Price = price,
+                Discount = createdReservation.Discount
+            };
+
+            return Ok(responseDTO);
         }
 
         // DELETE: api/Reservations/5
