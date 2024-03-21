@@ -20,6 +20,12 @@ public class MappingProfile : Profile
         CreateMap<Location, LocationDetailsDTO>()
             .ForMember(dest => dest.Images, opt => opt.MapFrom(src => src.Images))
             .ForMember(dest => dest.Landlord, opt => opt.MapFrom(src => src.Landlord));
+
+        CreateMap<Landlord, LandlordDTO>()
+            .ForMember(dest => dest.Name, opt => opt.MapFrom(src => $"{src.FirstName} {src.LastName}"))
+            .ForMember(dest => dest.Avatar, opt => opt.MapFrom(src => src.Avatar.Url));
+
+        CreateMap<Image, ImageDTO>();
     }
 
     public static string GetImageURL(IEnumerable<Image> images)

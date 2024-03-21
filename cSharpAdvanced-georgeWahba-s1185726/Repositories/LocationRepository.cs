@@ -30,7 +30,10 @@ namespace cSharpAdvanced_georgeWahba_s1185726.Repositories
 
         public async Task<Location> GetLocationById(int id, CancellationToken cancellationToken)
         {
-            return await _context.Location.FindAsync(new object[] { id }, cancellationToken);
+            return await _context.Location
+                .Include(l => l.Images)  // Eager loading for Images
+                .Include(l => l.Landlord) // Eager loading for Landlord
+                .FirstOrDefaultAsync(l => l.Id == id, cancellationToken);
         }
 
         public async Task<Location> AddLocation(Location location, CancellationToken cancellationToken)
