@@ -31,8 +31,8 @@ namespace cSharpAdvanced_georgeWahba_s1185726.Repositories
         public async Task<Location> GetLocationById(int id, CancellationToken cancellationToken)
         {
             return await _context.Location
-                .Include(l => l.Images)  // Eager loading for Images
-                .Include(l => l.Landlord) // Eager loading for Landlord
+                .Include(l => l.Images)
+                .Include(l => l.Landlord)
                 .FirstOrDefaultAsync(l => l.Id == id, cancellationToken);
         }
 
@@ -84,7 +84,10 @@ namespace cSharpAdvanced_georgeWahba_s1185726.Repositories
 
         public async Task<IEnumerable<Location>> SearchLocations(SearchRequestDTO request, CancellationToken cancellationToken)
         {
-            var query = _context.Location.AsQueryable();
+            var query = _context.Location
+                .Include(location => location.Landlord)
+                .Include(location => location.Images)
+                .AsQueryable();
 
             if (request.Features.HasValue)
             {

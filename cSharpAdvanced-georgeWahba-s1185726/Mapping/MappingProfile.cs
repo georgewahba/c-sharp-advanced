@@ -19,6 +19,7 @@ public class MappingProfile : Profile
 
         CreateMap<Location, LocationDetailsDTO>()
             .ForMember(dest => dest.Images, opt => opt.MapFrom(src => src.Images))
+            .ForMember(dest => dest.Features, opt => opt.MapFrom(src => src.Feature))
             .ForMember(dest => dest.Landlord, opt => opt.MapFrom(src => src.Landlord));
 
         CreateMap<Landlord, LandlordDTO>()
@@ -37,7 +38,7 @@ public class MappingProfile : Profile
             {
                 return coverImage.Url;
             }
-        }
+        }   
         return null;
     }
 

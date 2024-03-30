@@ -74,7 +74,7 @@ namespace cSharpAdvanced_georgeWahba_s1185726.Controllers
                 EndDate = request.EndDate,
                 LocationId = request.LocationId,
                 CustomerId = customer.Id,
-                Discount = request.Discount ?? 0 // Als er geen korting is, stel deze dan in op 0
+                Discount = request.Discount ?? 0 
             };
 
             // Sla de reservering op in de database

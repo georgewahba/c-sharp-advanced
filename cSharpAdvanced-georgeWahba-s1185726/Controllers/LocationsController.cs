@@ -126,8 +126,7 @@ namespace cSharpAdvanced_georgeWahba_s1185726.Controllers
         [HttpPost("Search")]
         public async Task<ActionResult<IEnumerable<Location2DTO>>> Search([FromBody] SearchRequestDTO request, CancellationToken cancellationToken)
         {
-            // Ignore search criteria and return all locations
-            var locations = await _locationRepository.GetAllLocations(cancellationToken);
+            var locations = await _locationRepository.SearchLocations(request, cancellationToken);
 
             if (locations == null || !locations.Any())
             {
