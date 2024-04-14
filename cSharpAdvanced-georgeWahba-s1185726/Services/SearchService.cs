@@ -21,13 +21,11 @@ namespace cSharpAdvanced_georgeWahba_s1185726.Services
 
         public IEnumerable<Location> SearchLocations(string searchTerm)
         {
-            // Perform a basic search by location title or subtitle
             var result = _context.Location
                                 .Where(l => l.Title.Contains(searchTerm) || l.SubTitle.Contains(searchTerm))
                                 .ToList();
             return result;
         }
 
-        // You can add more advanced search methods here as per your application requirements
     }
 }

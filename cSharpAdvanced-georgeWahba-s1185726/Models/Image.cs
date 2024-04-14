@@ -6,9 +6,7 @@
         public string Url { get; set; }
         public bool IsCover { get; set; }
 
-        public int LocationId { get; set; } // Foreign key
-
-        // Navigation property for location
+        public int LocationId { get; set; }
         public Location Location { get; set; }
     }
 }
